@@ -1,0 +1,12 @@
+classes/
+lib/
+bin/
+.*
+!.gitignore
+*jar
+pom.xml
+target/
+*.iml
+*~
+lein
+__zum_upload.json

@@ -1,0 +1,46 @@
+<GAMS> = (<WS> (<comment> | <label> | input-block ))* <WS>
+ input-block = (<WS> <"*"> <WS> (<"-"> <WS>)? (description | type | identifier | unit | domain | validation | rule | note | default | hidden | processing | overview | shape | icon | fill | border | color))* variable-definition <load>?
+
+ type        =  <"type:"> text
+ description = <"description:"> text
+ identifier  = <"identifier:"> text
+ unit        = <"unit:"> <WS> (<"["> #"[^\]\n]*" <"]">)?
+ domain      = <"domain:"> <WS> (domain-enumeration | domain-range)?
+ validation  = <"validation:"> <WS> (if-validation | comparison)?
+ rule        = <"rule:">       <WS> if-rule? 
+ note        = <"note:"> text
+ default     = <"default:"> text
+ hidden      = <"hidden:"> text
+ overview    = <"overview:"> text
+ processing  = <"processing:"> (parameter-name ( komma parameter-name)*)?
+ icon        = <"icon:"> <WS> text
+ fill        = <"fill:"> <WS> text
+ color       = <"color:"> <WS> text
+ border      = <"border:"> <WS> text
+ shape       = <"shape:"> <WS> ("rectangle"|"ellipse"|"pentagon"|"hexagon"|"octagon"|"flower"|"gear"|"circle"|"cross"|"diamond"|"square"|"triangle-down"|"triangle-up")
+ 
+ variable-definition = <WS> (set | parameter | scalar | variable) <text> <";"?>
+ domain-range        = ("(" | "[") (min-defined | max-defined | both-defined) <WS> (")" | "]")
+ min-defined         = number komma !number
+ max-defined         = komma number
+ both-defined        = number komma number 
+ domain-enumeration  = <"["> number (<WS> <"|"> number)* <"]">
+ set                 = <#"(?i)SET"> name !'(' <text>
+ parameter           = <#"(?i)PARAMETER"> name  !'(' <text>
+ scalar              = <#"(?i)SCALAR"> <WS> parameter-name <text>
+ variable            = <#"(?i)VARIABLE"> name  !'(' <text>
+
+ if-rule       = <"IF"> <WS> <"("> name <WS> <"=="> boolean komma name <WS> <"="> boolean <WS> <")">
+ if-validation = <"IF"> <WS> <"("> name <WS> <"=="> boolean komma name <WS> <"=="> boolean <WS> <")">
+ comparison    = name <WS> ("<"|"<="|">"|">="|"=="|"!=") name
+ <komma> = <WS> <",">
+ comment = <"***"> text 
+ label   = <WS> "$" #"(?i)LABEL" text
+ load    = <WS> "$" #"(?i)LOAD" text
+ number  = <WS> #"-?(0|([1-9][0-9]*))(\.[0-9]+)?([eE][+-]?[0-9]+)?"
+ name    = (parameter-name dependencies / parameter-name)
+ dependencies = <"("> parameter-name (<komma> parameter-name)* <")">
+ <parameter-name> = <WS> ("*" | #"[a-zA-Z][a-zA-Z0-9_]*") 
+ text    = #"[^\n]*"
+ boolean = <WS> ("0"|"1")
+ <WS>    = #"\s*"

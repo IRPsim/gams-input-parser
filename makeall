@@ -1,0 +1,7 @@
+./lein install
+./lein with-profile check-gams uberjar
+./lein localrepo install target/check-gams-model.jar gams-input-parser/check-gams-model 1.0.0
+./lein with-profile backend-generator uberjar
+./lein localrepo install target/backend-generator.jar gams-input-parser/backend-generator 1.0.0
+./lein with-profile frontend-generator uberjar
+./lein localrepo install target/frontend-generator.jar gams-input-parser/frontend-generator 1.0.0
